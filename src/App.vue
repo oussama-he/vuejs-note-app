@@ -1,38 +1,58 @@
 <template>
   <div class="content-expand" id="app">
     <div class="topbar">
-      <i class="far fa-sticky-note fa-3x"> Note App</i>
+      <i class="far fa-sticky-note fa-3x">Note App</i>
       <div class="actions">
         <a href="#" @click="createNote" title="New Note">
           <i class="fa fa-plus-circle"></i>
         </a>
-        <a v-if="activeNote" href="#" title='Info About Note'>
+        <a v-if="activeNote" href="#" title="Info About Note" @click="modalVisible=true">
           <i class="fa fa-info-circle"></i>
         </a>
-        <a href="#" v-if='activeNote' @click="deleteNote" title="Delete This Note">
+        <a href="#" v-if="activeNote" @click="deleteNote" title="Delete This Note">
           <i class="fa fa-trash"></i>
         </a>
       </div>
     </div>
     <div class="main">
-      <note-list
-        :notes="notes"
-        @select-note="changeActiveNote"
-        @create-note="createNote"
-      ></note-list>
+      <note-list :notes="notes" @select-note="changeActiveNote" @create-note="createNote"></note-list>
       <div class="note-area">
         <note-pad v-if="activeNote" :note="activeNote" @update-note="updateNote"></note-pad>
         <note-pad v-else :note="starterNote"></note-pad>
+        <modal title="Info About Note" :visible="modalVisible" @hide-modal="modalVisible=false">
+          <div v-if="activeNote">
+            <p>
+              <i class="fa fa-pencil-alt"></i>
+              Word Count: {{countWords(activeNote.noteBody)}}
+            </p>
+            <p>
+              <i class="fa fa-calendar-alt"></i>
+              Created At: {{new Date(activeNote.timestamp*1000).toDateString()}}
+            </p>
+          </div>
+        </modal>
       </div>
     </div>
-   </div>
+    <footer>
+      <div class="footer">
+        <p>
+          Created by:
+          <a href="https://github.com/oussama-he" target="_blank">
+            Oussama Heloulou
+            <i class="fa fa-external-link-alt"></i>
+          </a>
+        </p>
+      </div>
+    </footer>
+  </div>
 </template>
 
 <script>
 import NotePad from "./components/NotePad.vue";
 import NoteList from "./components/NoteList.vue";
-import {getNotes, addNote, updateNote, deleteNote} from './utils/storage.js'
-import {getUnixTimestamp} from './utils/utils.js'
+import Modal from "./components/Modal.vue";
+import { getNotes, addNote, updateNote, deleteNote } from "./utils/storage.js";
+import { getUnixTimestamp, countWords } from "./utils/utils.js";
 export default {
   name: "app",
   data() {
@@ -52,31 +72,42 @@ export default {
       this.activeNote = note;
     },
     updateNote(note) {
-      let index = this.notes.findIndex(element => element.timestamp == note.timestamp)
+      let index = this.notes.findIndex(
+        element => element.timestamp == note.timestamp
+      );
       if (index == -1) {
-        return
+        return;
       } else {
-        this.notes[index] = note
+        this.notes[index] = note;
       }
-      updateNote(note)
+      updateNote(note);
     },
     deleteNote() {
-      if(this.activeNote !== null && confirm("Are you sure you want to delete this note?")) {
-        let index = this.notes.findIndex(element => element.timestamp == this.activeNote.timestamp)
-        this.notes = this.notes.filter((element, _index)=> {return index != _index})
-        deleteNote(this.activeNote)
+      if (
+        this.activeNote !== null &&
+        confirm("Are you sure you want to delete this note?")
+      ) {
+        let index = this.notes.findIndex(
+          element => element.timestamp == this.activeNote.timestamp
+        );
+        this.notes = this.notes.filter((element, _index) => {
+          return index != _index;
+        });
+        deleteNote(this.activeNote);
       }
     },
     createNote() {
-      let note = { noteBody: "New note...", timestamp: getUnixTimestamp() }
-      this.notes.unshift(note)
-      addNote(note)
-      this.changeActiveNote(note)
-    }
+      let note = { noteBody: "New note...", timestamp: getUnixTimestamp() };
+      this.notes.unshift(note);
+      addNote(note);
+      this.changeActiveNote(note);
+    },
+    countWords: countWords
   },
   components: {
     NotePad,
-    NoteList
+    NoteList,
+    Modal
   }
 };
 </script>
@@ -98,6 +129,7 @@ body {
 }
 a {
   color: #495057;
+  text-decoration: none;
 }
 .content-expand {
   display: block;
@@ -138,5 +170,6 @@ a {
   height: 10%;
   padding: 10px 10px;
   background: #f8f9fa;
+  text-align: center;
 }
 </style>

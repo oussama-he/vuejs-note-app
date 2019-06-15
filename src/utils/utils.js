@@ -14,4 +14,10 @@ function  compileMarkdown(text) {
 function getUnixTimestamp() {
     return new Date().getTime()/1000|0
 }
-export { escapeHTML, compileMarkdown, getUnixTimestamp}
+
+function countWords(str) {
+    return str.trim().split(/\s+/).length;
+}
+
+
+export { escapeHTML, compileMarkdown, getUnixTimestamp, countWords}
