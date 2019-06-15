@@ -1,7 +1,7 @@
 <template>
   <div class="content-expand" id="app">
     <div class="topbar">
-      <i class="far fa-sticky-note fa-3x">Note App</i>
+      <h1><i class="far fa-sticky-note"></i> Note App</h1>
       <div class="actions">
         <a href="#" @click="createNote" title="New Note">
           <i class="fa fa-plus-circle"></i>
@@ -153,12 +153,10 @@ a {
 }
 .main {
   display: flex;
-  height: 80%;
+  height: 77%;
   margin-left: -10px;
 }
 .main .note-area {
-  /* height: 500px; */
-  /* flex: none; */
   overflow-y: scroll;
   border-radius: 25px;
   background: white;
@@ -167,7 +165,6 @@ a {
   width: 75%;
 }
 .footer {
-  height: 10%;
   padding: 10px 10px;
   background: #f8f9fa;
   text-align: center;
