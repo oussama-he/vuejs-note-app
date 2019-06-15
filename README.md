@@ -1,4 +1,4 @@
-# note-app
+# VueJS Note App
 
 ## Project setup
 ```
@@ -15,15 +15,13 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
+### ToDos
+- Add check of localStorage availability
+- Create tests 
+- ...
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Contributions
+Contributions are welcome to improve the project.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### License
+Any one has the right to use this project in accordance with Islamic law and its values.
