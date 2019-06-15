@@ -19,14 +19,15 @@ export default {
   data() {
     return {
       focus: false,
-      localNote: this.note.preview
+      localNote: this.note.noteBody
     };
   },
   methods: {
     updateNote(event) {
       this.focus = false;
       this.localNote = event.currentTarget.innerText;
-      this.$emit("update-note", (this.note["preview"] = this.localNote));
+      this.note["noteBody"] = this.localNote
+      this.$emit("update-note", this.note);
     }
   },
   computed: {
@@ -40,7 +41,7 @@ export default {
   },
   watch: {
     note(value) {
-      this.localNote = value.preview;
+      this.localNote = value.noteBody;
     }
   }
 };
@@ -59,5 +60,4 @@ export default {
     bottom: 0;
     border: 1px solid red;
 }
-
 </style>

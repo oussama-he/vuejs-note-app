@@ -10,7 +10,8 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "marked": "^0.6.2",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-truncate-filter": "^1.1.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",

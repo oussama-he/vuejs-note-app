@@ -11,4 +11,7 @@ function  compileMarkdown(text) {
     return result.replace(/\n/g, "");
   }
 
-export { escapeHTML, compileMarkdown}
+function getUnixTimestamp() {
+    return new Date().getTime()/1000|0
+}
+export { escapeHTML, compileMarkdown, getUnixTimestamp}

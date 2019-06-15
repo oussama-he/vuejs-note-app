@@ -1,21 +1,16 @@
 <template>
   <div class="content-expand" id="app">
     <div class="topbar">
-      <div class="search">
-        <input type="text" class="input-search" placeholder="search">
-      </div>
+      <i class="far fa-sticky-note fa-3x"> Note App</i>
       <div class="actions">
-        <a href="#">
+        <a href="#" @click="createNote" title="New Note">
           <i class="fa fa-plus-circle"></i>
         </a>
-        <a href="#">
+        <a v-if="activeNote" href="#" title='Info About Note'>
           <i class="fa fa-info-circle"></i>
         </a>
-        <a href="#">
+        <a href="#" v-if='activeNote' @click="deleteNote" title="Delete This Note">
           <i class="fa fa-trash"></i>
-        </a>
-        <a href="#">
-          <i class="fa fa-archive"></i>
         </a>
       </div>
     </div>
@@ -23,45 +18,32 @@
       <note-list
         :notes="notes"
         @select-note="changeActiveNote"
-        @create-note="value => notes.push(value)"
+        @create-note="createNote"
       ></note-list>
       <div class="note-area">
         <note-pad v-if="activeNote" :note="activeNote" @update-note="updateNote"></note-pad>
         <note-pad v-else :note="starterNote"></note-pad>
-        <div class="note-tags">
-          <h1>Title</h1>
-          <p>note</p>
-          <ul>
-            <li>li 1</li>
-            <li>li 2</li>
-            <li>li 3</li>
-          </ul>
-        </div>
       </div>
     </div>
-    <footer class="footer">&lt;total bookmarks&gt;</footer>
-  </div>
+   </div>
 </template>
 
 <script>
 import NotePad from "./components/NotePad.vue";
 import NoteList from "./components/NoteList.vue";
-
+import {getNotes, addNote, updateNote, deleteNote} from './utils/storage.js'
+import {getUnixTimestamp} from './utils/utils.js'
 export default {
   name: "app",
   data() {
     return {
-      notes: [
-        { title: "Note 1", preview: "note 1...", id: "1" },
-        { title: "Note 2", preview: "note 2...", id: "2" },
-        { title: "Note 3", preview: "note 3...", id: "3" }
-      ],
+      notes: getNotes(),
       activeNote: null,
+      modalVisible: false,
       starterNote: {
-        title: "starter note",
-        preview:
-          "# VueJS note app \n - to create a note click plus sign in left side \n - click/focus to edit note \n - click off/blur to save note and convert to markdown",
-        id: 0
+        noteBody:
+          "# VueJS note app \n - to create a note click plus sign in left side \n - click/focus to edit note \n - click off/blur to save note and compile to markdown",
+        timestamp: 1558686606
       }
     };
   },
@@ -70,7 +52,26 @@ export default {
       this.activeNote = note;
     },
     updateNote(note) {
-      this.notes[note.id] = note;
+      let index = this.notes.findIndex(element => element.timestamp == note.timestamp)
+      if (index == -1) {
+        return
+      } else {
+        this.notes[index] = note
+      }
+      updateNote(note)
+    },
+    deleteNote() {
+      if(this.activeNote !== null && confirm("Are you sure you want to delete this note?")) {
+        let index = this.notes.findIndex(element => element.timestamp == this.activeNote.timestamp)
+        this.notes = this.notes.filter((element, _index)=> {return index != _index})
+        deleteNote(this.activeNote)
+      }
+    },
+    createNote() {
+      let note = { noteBody: "New note...", timestamp: getUnixTimestamp() }
+      this.notes.unshift(note)
+      addNote(note)
+      this.changeActiveNote(note)
     }
   },
   components: {
@@ -108,19 +109,6 @@ a {
   display: flex;
   flex-direction: row;
   height: 10%;
-}
-.search {
-  width: 25%;
-  padding: 10px;
-}
-.input-search {
-  border-radius: 15px;
-  background: #eaecef;
-  border: 0px;
-  padding: 10px;
-  width: 100%;
-  /* font-weight: 500; */
-  font-size: 16px;
 }
 .actions {
   padding: 10px;
