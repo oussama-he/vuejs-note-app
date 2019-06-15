@@ -1,5 +1,6 @@
 # VueJS Note App
-
+A simple note app that use VueJS and localStorage of browser to create and edit notes in markdown format.
+![](./preview.gif)
 ## Project setup
 ```
 npm install
